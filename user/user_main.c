@@ -1,3 +1,4 @@
+#include <c_types.h>
 #include "ets_sys.h"
 #include "osapi.h"
 #include "os_type.h"
@@ -126,17 +127,27 @@ void ICACHE_FLASH_ATTR user_init()
     
 	struct softap_config apConfig;
 	struct ip_info ipinfo;
-	struct dhcps_lease lease;
+	//struct dhcps_lease lease;
 	char ssid[33];
 	char password[33];
 	char macaddress[17];
 	char info[150];
 
 	//DHCP
-	//wifi_softap_dhcps_stop();
-	wifi_softap_get_dhcps_lease(&lease);
-	//IP4_ADDR(&lease.start_ip, 10, 10, 10, 2);
-	//IP4_ADDR(&lease.end_ip, 10, 10, 10, 2);
+	if (wifi_softap_dhcps_status()) {
+		wifi_softap_dhcps_stop();
+	}
+	/*wifi_softap_get_dhcps_lease(&lease);
+	char tcpserverip[15];
+	os_sprintf(tcpserverip, "%s", TCPSERVERIP);
+	uint32 leaseAddr = ipaddr_addr(tcpserverip);
+	#ifdef PLATFORM_DEBUG
+		os_sprintf(info,"leaseAddr: %d\r\n",
+				leaseAddr);
+		ets_uart_printf(info);
+	#endif
+	lease.start_ip.addr = leaseAddr;
+	lease.end_ip.addr = leaseAddr;
 	lease.enable = true;
 	wifi_softap_set_dhcps_lease(&lease);
 	wifi_softap_dhcps_start();
@@ -147,7 +158,7 @@ void ICACHE_FLASH_ATTR user_init()
 					lease.start_ip,
 					lease.end_ip);
 		ets_uart_printf(info);
-	#endif
+	#endif*/
 
 	if(wifi_get_opmode() != SOFTAP_MODE)
 	{
